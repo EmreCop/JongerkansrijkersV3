@@ -1,0 +1,7 @@
+﻿body {
+}
+
+.userinputsfields{
+  display:flex;
+  flex-direction:column;
+}

@@ -38,14 +38,21 @@ namespace Jongerkansrijkers.Services
 				throw new Exception("User Does not Exits");
 			}
 			user.Email = email;
-			using (var  context = _dbContextFactory.CreateDbContext()) 
-			{
+      using (var context = _dbContextFactory.CreateDbContext())
+      {
 				context.Update(user);
 				context.SaveChanges();
 			}
-
-
-
+		}
+		
+		public List<User> GetallUser()
+		{
+      using (var context = _dbContextFactory.CreateDbContext())
+      {
+       var users = context.Users.ToList();
+        return users; 
+      }
+      
 		}
 
 
