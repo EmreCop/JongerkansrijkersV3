@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Jongerkansrijkers.Migrations
 {
     [DbContext(typeof(JongerenDbContext))]
-    [Migration("20231117002817_Added_Activiteiten_Table")]
-    partial class Added_Activiteiten_Table
+    [Migration("20231121101455_Added_ActiVeit_Table")]
+    partial class Added_ActiVeit_Table
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,32 +33,27 @@ namespace Jongerkansrijkers.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("BegeleiderId")
+                    b.Property<int?>("BegeleiderId")
                         .HasColumnType("int");
 
-                    b.Property<DateOnly>("Date")
+                    b.Property<DateOnly?>("Date")
                         .HasColumnType("date");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("JongerenId")
-                        .HasColumnType("int");
+                    b.Property<string>("JongerenIds")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("location")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BegeleiderId");
-
-                    b.HasIndex("JongerenId");
 
                     b.ToTable("Activiteiten");
                 });
@@ -138,19 +133,9 @@ namespace Jongerkansrijkers.Migrations
                 {
                     b.HasOne("Jongerkansrijkers.Components.Data.Models.User", "Begeleider")
                         .WithMany()
-                        .HasForeignKey("BegeleiderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Jongerkansrijkers.Components.Data.Models.Jongeren", "Jongeren")
-                        .WithMany()
-                        .HasForeignKey("JongerenId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BegeleiderId");
 
                     b.Navigation("Begeleider");
-
-                    b.Navigation("Jongeren");
                 });
 
             modelBuilder.Entity("Jongerkansrijkers.Components.Data.Models.Jongeren", b =>

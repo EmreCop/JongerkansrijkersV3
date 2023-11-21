@@ -1,0 +1,62 @@
+﻿@inject InstituutService instituutService
+
+
+<button class="btn btn-primary" @onclick="AddNewInstituut">Add New instituut</button>
+<InstituutModal @bind-IsVisible="modalVisible" instutuut="Modalinstutuut" Title="Instituut" NewInstuut=AddNewinstituut>
+
+</InstituutModal>
+<table>
+
+	<thead>
+
+		<tr>
+			<th>Id</th>
+			<th>Name</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var instituut in Instutuuts)
+		{
+			<tr>
+				<td>@instituut.Id</td>
+				<td>@instituut.Name</td>
+				<td><button @onclick="()=>Edit(instituut)" class=" btn btn-primary">Edit</button></td>
+				<td><DelteButton Clicked="()=>instituutService.RemoveInstutuutById(instituut.Id)" /></td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+
+@code {
+
+	Instutuut? Modalinstutuut;
+
+	List<Instutuut> Instutuuts => instituutService.GetallInstutuut();
+
+	bool AddNewinstituut = false;
+
+	bool modalVisible = false;
+
+	void ShowModal()
+	{
+		modalVisible = true;
+	}
+
+
+
+	void Edit(Instutuut Editedinstutuut)
+	{
+		AddNewinstituut = false;
+		Modalinstutuut = Editedinstutuut;
+		ShowModal();
+	}
+
+	void AddNewInstituut()
+	{
+		AddNewinstituut = true;
+		ShowModal();
+
+	}
+
+}

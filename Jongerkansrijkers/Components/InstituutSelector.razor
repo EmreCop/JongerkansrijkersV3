@@ -1,0 +1,29 @@
+﻿@inject InstituutService instituutService
+
+<select class="form-select"  @onchange="HandleSelection">
+	@foreach ( var instituut in Instutuuts)
+	{
+		<option value="@instituut.Id"> @instituut.Name</option>
+	}
+
+</select>
+
+
+
+@code {
+	[Parameter]
+	public EventCallback<int> OptionSelected { get; set; }
+
+	List<Instutuut> Instutuuts => instituutService.GetallInstutuut();
+
+
+
+
+    async Task HandleSelection(ChangeEventArgs e)
+    {
+        if (int.TryParse(e?.Value?.ToString(), out int selectedId))
+        {
+            await OptionSelected.InvokeAsync(selectedId);
+        }
+    }
+}

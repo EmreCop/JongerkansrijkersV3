@@ -12,6 +12,9 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddTransient<UserService>();
+builder.Services.AddTransient<InstituutService>();
+builder.Services.AddTransient<JongerenService>();
+builder.Services.AddTransient<ActiviteitService>();
 builder.Services.AddDbContextFactory<JongerenDbContext>((DbContextOptionsBuilder options) =>
     options.UseSqlServer(connectionString));
 

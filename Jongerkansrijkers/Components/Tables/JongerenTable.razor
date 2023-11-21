@@ -1,0 +1,72 @@
+﻿@inject JongerenService JongerenService
+@inject InstituutService instituutService
+
+
+<button class="btn btn-primary" @onclick="AddNewJongeren" >Add New Jongeren</button>
+<JongereModal @bind-IsVisible="modalVisible" Jongeren="ModalJongeren" Title="Jongeren" NewJongeren=NewJongeren>
+
+</JongereModal>
+<table>
+
+	<thead>
+
+		<tr>
+			<th>Id</th>
+			<th>Name</th>
+			<th>Email</th>
+			<th>Brithdate</th>
+			<th>Instituut</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var Jongeren in Jongerens)
+		{
+			<tr>
+				<td>@Jongeren.Id</td>
+				<td>@Jongeren.Name</td>
+				<td>@Jongeren.Email</td>
+				<td>@Jongeren.Brithdate</td>
+				<td>@Jongeren.Instutuut?.Name</td>
+				
+				<td><button @onclick="()=>Edit(Jongeren)" class=" btn btn-primary">Edit</button></td>
+				<td><DelteButton Clicked="()=>JongerenService.RemoveJongerenById(Jongeren.Id)" /></td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+
+@code {
+
+	Jongeren? ModalJongeren;
+
+	
+
+	List<Jongeren> Jongerens => JongerenService.GetallJongeren();
+
+	
+
+	bool modalVisible = false;
+	bool NewJongeren = false;
+
+	void ShowModal()
+	{
+		modalVisible = true;
+	}
+
+	void AddNewJongeren()
+	{
+		NewJongeren = true;
+		ShowModal();
+	}
+
+	void Edit(Jongeren EditedJongeren)
+	{
+		NewJongeren = false;
+		ModalJongeren = EditedJongeren;
+		ShowModal();
+	}
+
+	
+
+}

@@ -1,0 +1,110 @@
+﻿@inherits ComponentBase
+@inject JongerenService JongerenService
+@inject InstituutService instituutService
+
+
+<div class="modal" tabindex="-1" style="display: @(IsVisible ? "block" : "none")">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">@Title</h5>
+				<button type="button" class="close btn btn-danger" @onclick="CloseModal">
+					<span>&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				@if (Jongeren != null && NewJongeren == false)
+				{
+					<div class="form-group">
+						<label>Name</label>
+						<input class="form-control" type="text" @bind="Jongeren.Name" @bind:after="Update" />
+
+						<label>Email</label>
+						<input class="form-control" type="email" @bind="Jongeren.Email" @bind:after="Update" />
+
+						<label>BrirthDate</label>
+						<input class="form-control" type="date" @bind=Jongeren.Brithdate @bind:after="Update" />
+
+						<InstituutSelector OptionSelected=" InstituutSelected" />
+
+					</div>
+				}
+				else
+				{
+					<div class="form-group">
+						<label>Name</label>
+						<input class="form-control" type="text" @bind="NewName" />
+
+						<label>Email</label>
+						<input class="form-control" type="email" @bind="NewEmail" />
+
+						<label>BrirthDate</label>
+						<input class="form-control" type="Date" @bind="NewDate" />
+
+						<br />
+						<button class="btn btn-primary form-control " @onclick="AddNewJongeren">Add New Jongeren</button>
+					</div>
+				}
+			</div>
+			<div class="modal-footer">
+			</div>
+		</div>
+	</div>
+</div>
+
+@code {
+	[Parameter]
+	public string? Title { get; set; }
+
+	[Parameter]
+	public RenderFragment? Body { get; set; }
+
+	[Parameter]
+	public bool IsVisible { get; set; }
+
+	[Parameter]
+	public EventCallback<bool> IsVisibleChanged { get; set; }
+
+	[Parameter]
+	public Jongeren? Jongeren { get; set; }
+
+	[Parameter]
+	public bool NewJongeren { get; set; }
+
+	string? NewName;
+	string? NewEmail;
+	DateOnly NewDate;
+
+
+	private async Task CloseModal()
+	{
+		IsVisible = false;
+		await IsVisibleChanged.InvokeAsync(IsVisible);
+
+	}
+
+	void Update()
+	{
+		JongerenService.UpdateJongeren(Jongeren!);
+		StateHasChanged();
+	}
+	void AddNewJongeren()
+	{
+
+		var NewJongeren = new Jongeren { Name = NewName, Email = NewEmail, Brithdate = NewDate };
+		JongerenService.AddJongeren(NewJongeren);
+		NewName = "";
+		NewEmail = "";
+		NewDate = new();
+		CloseModal();
+		StateHasChanged();
+
+	}
+
+	void InstituutSelected(int selectedId)
+	{
+		var selectedInstutuut = instituutService.GetInstutuutById(selectedId);
+		Jongeren!.Instutuut = selectedInstutuut;
+		Update();
+	}
+}

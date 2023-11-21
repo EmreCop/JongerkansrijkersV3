@@ -1,53 +1,57 @@
 ﻿@page "/"
-@using Jongerkansrijkers.Components.Data.Models
-@using Jongerkansrijkers.Services
 @inject UserService userService;
 
 
 <div class="userinputsfields">
-  <label for="NameInput">Name</label>
-  <input type="text" id="NameInput" @bind="@user.Name"></input>
+	<label for="NameInput">Name</label>
+	<input type="text" id="NameInput" @bind="@user.Name"></input>
 
-  <label for="EmailInput">Email</label>
-  <input type="email" id="EmailInput" @bind="@user.Email" />
+	<label for="EmailInput">Email</label>
+	<input type="email" id="EmailInput" @bind="@user.Email" />
 
-  <label for="PassWordInput">Password</label>
-  <input type="text" id="PassWordInput" @bind="@user.Password"></input>
+	<label for="PassWordInput">Password</label>
+	<input type="text" id="PassWordInput" @bind="@user.Password"></input>
 
- 
+	<button class="btn-primary" @onclick="MakeNewUser">Add User</button>
 
 </div>
-<button class="btn-primary" @onclick="MakeNewUser">Add User</button>
 
- <table>
-  <thead>
-    <tr>
-      <th scope="col">Name</th>
-      <th scope ="col">Email</th>
-    </tr>
-  </thead>
-  <tbody>
-    @foreach (var user in Users)
-    {
-      <tr>
-        <td>@user.Name</td>
-        <td>@user.Email</td>
-      </tr>
-    }
-  </tbody>
+
+<table>
+	<thead>
+		<tr>
+			<th scope="col">Name</th>
+			<th scope="col">Email</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var user in Users)
+		{
+			<tr>
+				<td>@user.Name</td>
+				<td>@user.Email</td>
+				<td><DelteButton Clicked="()=> userService.RemoveUserById(user.Id)" /></td>
+			</tr>
+		}
+	</tbody>
 </table>
+
+<InstituutTableComponent/>
+<JongerenTable/>
 
 @code
 {
-  User user = new();
+	User user = new();
 
-  string name ="a";
+	List<User> Users => userService.GetallUser();
 
-  List<User> Users => userService.GetallUser();
+	void MakeNewUser()
+	{
+		var newUser = user;
+		userService.AddUser(newUser);
+		user = new();
+	}
 
-  void MakeNewUser()
-  {
-    var newUser = user;
-    userService.AddUser(newUser);
-  }
+
+
 }

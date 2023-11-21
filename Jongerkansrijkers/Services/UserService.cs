@@ -28,33 +28,52 @@ namespace Jongerkansrijkers.Services
 
 		}
 
-
-		public void UpdateUserByName(string name, string email)
+		public User GetUserById(int id)
 		{
+			using (var contex = _dbContextFactory.CreateDbContext())
+			{
+				var user = contex.Users.SingleOrDefault(x => x.Id == id);
+				return user ?? throw new Exception("User Does not Exits ");
+			}
+		}
 
-			var user = GetUserByName(name);
+
+
+
+		public void UpdateUser(User user)
+		{
 			if (user == null)
 			{
 				throw new Exception("User Does not Exits");
 			}
-			user.Email = email;
-      using (var context = _dbContextFactory.CreateDbContext())
-      {
+
+			using (var context = _dbContextFactory.CreateDbContext())
+			{
 				context.Update(user);
 				context.SaveChanges();
 			}
 		}
-		
+
 		public List<User> GetallUser()
 		{
-      using (var context = _dbContextFactory.CreateDbContext())
-      {
-       var users = context.Users.ToList();
-        return users; 
-      }
-      
+			using (var context = _dbContextFactory.CreateDbContext())
+			{
+				var users = context.Users.ToList();
+				return users;
+			}
+
 		}
 
+		public void RemoveUserById(int id)
+		{
+			using (var context = _dbContextFactory.CreateDbContext())
+			{
+				var user = GetUserById(id);
+				context.Users.Remove(user);
+				context.SaveChanges();
 
+			}
+
+		}
 	}
 }
