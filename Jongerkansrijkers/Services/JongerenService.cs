@@ -9,7 +9,7 @@ namespace Jongerkansrijkers.Services
 		private IDbContextFactory<JongerenDbContext> _dbContextFactory = dbContextFactory;
 
 
-        public void AddJongeren(Jongeren Jongeren)
+        public void AddJongerenen(Jongeren Jongeren)
         {
             using (var contex = _dbContextFactory.CreateDbContext())
             {
